@@ -28,7 +28,7 @@ function Login() {
           "Content-Type": "application/json",
           "Accept": "application/json"
         },
-        credentials: "include",
+        credentials: "include", // per cookies e autentikimit
         body: JSON.stringify({ email, password }),
       });
 

@@ -11,10 +11,19 @@ export function AuthProvider({ children }) {
     // 3. Ruaje token-in ne localStorage per sesione te ardhshme
     useEffect(() => {
         const savedToken = localStorage.getItem("auth_token");
-        const savedUser = localStorage.getItem("auth_user");
-        if (savedToken && savedUser) {
-            setToken(savedToken);
-            setUser(JSON.parse(savedUser));
+        const savedUserRaw = localStorage.getItem("auth_user");
+
+        if (savedToken && savedUserRaw) {
+            try {
+                const parsedUser = JSON.parse(savedUserRaw);
+                setToken(savedToken);
+                setUser(parsedUser);
+            } catch (err) {
+                console.error("Failed to parse user from localStorage", err);
+                // Nese ndodh ndonje error, pastroj localStorage qe te mos ndodhe perseri
+                localStorage.removeItem("auth_token");
+                localStorage.removeItem("auth_user");
+            }
         }
     }, []);
 
