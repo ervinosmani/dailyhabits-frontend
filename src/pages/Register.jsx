@@ -159,14 +159,14 @@ function Register() {
           >
             Register
           </button>
-
-          <p className="mt-4 text-center text-sm text-gray-600">
-            Already have an account?{' '}
-            <Link to="/login" className="text-[#4B7ABF] hover:underline">
-              Log in
-            </Link>
-          </p>
         </form>
+
+        <p className="mt-4 text-center text-sm text-gray-600">
+          Already have an account?{" "}
+          <Link to="/login" className="text-[#4B7ABF] hover:underline">
+            Log in
+          </Link>
+        </p>
       </div>
     </div>
   );
