@@ -27,7 +27,7 @@ function Register() {
     // Funksioni per dergimin e te dhenave per regjistrim
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError("");   // Pastrojme çdo gabim ekzistues
+        setError("");   // Pastrojme cdo gabim ekzistues
 
         try {
             // Marrim CSRF cookie (kerkohet nga Laravel Sanctum)

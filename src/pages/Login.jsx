@@ -13,7 +13,7 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(""); // e pastrojme errorin para çdo perpjekjeje te re
+    setError(""); // e pastrojme errorin para cdo perpjekjeje te re
 
     try {
       // Marrja e CSRF cookie nga backend-i (Sanctum)
@@ -43,7 +43,7 @@ function Login() {
         return;
       }
 
-      // Nese gjithçka eshte ne rregull
+      // Nese gjithcka eshte ne rregull
       const data = await res.json();
       login(data.user); // ruajme perdoruesin ne context
       navigate("/dashboard"); // ridrejtojme te dashboard
