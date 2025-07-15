@@ -9,33 +9,47 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);  // Gjendja për me tregu ose fsheh passwordin
+  const [showPassword, setShowPassword] = useState(false); // per shfaqje ose fshehje te passwordit
 
   const handleLogin = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
+    setError(""); // e pastrojme errorin para çdo perpjekjeje te re
 
-  try {
-    // Merr CSRF cookie
-    await fetch("http://localhost:8000/sanctum/csrf-cookie", {
-      credentials: "include",
-    });
+    try {
+      // Marrja e CSRF cookie nga backend-i (Sanctum)
+      await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+        credentials: "include",
+      });
 
-    const res = await fetch("http://localhost:8000/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include", // aktivizon cookie
-      body: JSON.stringify({ email, password }),
-    });
+      // Dergimi i te dhenave per login
+      const res = await fetch("http://localhost:8000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (!res.ok) throw new Error("Invalid credentials");
+      // Nese kredencialet jane gabim ose ka error validimi
+      if (!res.ok) {
+        if (res.status === 422 || res.status === 401) {
+          const errorData = await res.json();
+          setError(errorData.message || "Invalid email or password");
+        } else {
+          throw new Error("Something went wrong. Please try again.");
+        }
+        return;
+      }
 
-    const data = await res.json();
-    login(data.user, data.token); // ose vetëm user nëse s'ka token
-    navigate("/dashboard");
+      // Nese gjithçka eshte ne rregull
+      const data = await res.json();
+      login(data.user); // ruajme perdoruesin ne context
+      navigate("/dashboard"); // ridrejtojme te dashboard
     } catch (err) {
-        setError(err.message);
+      // Nese nuk mund te lidhet me serverin
+      setError("Could not connect to the server. Please try again later.");
     }
   };
 
@@ -51,49 +65,49 @@ function Login() {
         )}
 
         <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-                <label htmlFor="email" className="block text-gray-700 font-medium">Email</label>
-                <input
-                type="email"
-                id="email"
-                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4B7ABF]"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Your email"
-                required
-                />
-            </div>
+          <div>
+            <label htmlFor="email" className="block text-gray-700 font-medium">Email</label>
+            <input
+              type="email"
+              id="email"
+              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4B7ABF]"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Your email"
+              required
+            />
+          </div>
 
-            <div className="mb-4 relative">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                <input
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Your password"
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-                <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-[38px] text-sm text-primary hover:underline"
-                >
-                {showPassword ? 'Hide' : 'Show'}
-                </button>
-            </div>
-
-            {/* 💡 Ketu vjen butoni i munguar */}
+          <div className="mb-4 relative">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Your password"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#4B7ABF]"
+              required
+            />
             <button
-                type="submit"
-                className="w-full bg-[#4B7ABF] text-white py-2 px-4 rounded-md hover:bg-[#3A6AA5] transition-colors"
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-[38px] text-sm text-[#4B7ABF] hover:underline"
             >
-                Log In
+              {showPassword ? 'Hide' : 'Show'}
             </button>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-[#4B7ABF] text-white py-2 px-4 rounded-md hover:bg-[#3A6AA5] transition-colors"
+          >
+            Log In
+          </button>
         </form>
       </div>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;
