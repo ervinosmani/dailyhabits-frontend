@@ -46,7 +46,7 @@ function Login() {
       // Nese gjithcka eshte ne rregull
       const data = await res.json();
       login(data.user); // ruajme perdoruesin ne context
-      navigate("/dashboard"); // ridrejtojme te dashboard
+      navigate("/dashboard"); // ridrejtojme te layout
     } catch (err) {
       // Nese nuk mund te lidhet me serverin
       setError("Could not connect to the server. Please try again later.");
