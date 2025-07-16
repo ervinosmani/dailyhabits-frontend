@@ -12,7 +12,7 @@ export default function DashboardHeader() {
     const handleLogoutClick = () => setShowConfirm(true);
     const handleConfirmLogout = () => {
         logout();   // Pastrohet localStorage dhe context
-        navigate("/login"); // Ridrejtohet te faqja e login-it
+        window.location.href = "/"; // Shkon në landing direkt, jashtë rrugëve të mbrojtura
     };
     // Kur klikohet "Logout" per here te pare
     const handleCancelLogout = () => setShowConfirm(false);

@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
+import LandingPage from "./pages/LandingPage";
 
 export default function AppRouter() {
     return (
@@ -12,6 +13,7 @@ export default function AppRouter() {
         <AuthProvider>
             <BrowserRouter>
                 <Routes>
+                    <Route path="/" element={<LandingPage />} />
 
                     {/* Rruget publike: login & register */}
                     <Route path="/login" element={<Login />} />
